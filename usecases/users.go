@@ -8,21 +8,23 @@ import (
 
 func (controller Controller) UsersGet(req request.UsersGet) (response.UsersGet, error) {
 
+	var res response.UsersGet
+
 	if ok := request.Process(req); !ok {
-		return response.UsersGet{}, errors.New("invalid request params")
+		return res, errors.New("invalid request params")
 	}
 
 	user, err := controller.db.GetUserById(req.Id)
 
 	if err != nil {
-		return response.UsersGet{}, errors.New("internal error")
+		return res, errors.New("internal error")
 	}
 
 	if user.Id == 0 {
-		return response.UsersGet{}, errors.New("invalid user id")
+		return res, errors.New("invalid user id")
 	}
 
-	res := response.UsersGet{
+	res = response.UsersGet{
 		Id:   user.Id,
 		Name: user.Name,
 	}
