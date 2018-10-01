@@ -29,7 +29,7 @@ func main() {
 
 	controller := usecases.NewController(db)
 
-	APIHandler := api.NewAPIHandler(controller)
+	APIHandler := api.NewAPIHandler(cfg.Handler, controller)
 
 	err = server.RunServer(cfg.Server, APIHandler)
 

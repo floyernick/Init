@@ -20,6 +20,11 @@ type ServerConfig struct {
 	SecureCA     string        `yaml:"secure_ca"`
 }
 
+type HandlerConfig struct {
+	CheckHash bool   `yaml:"hash_check"`
+	HashSalt  string `yaml:"hash_salt"`
+}
+
 type DatabaseConfig struct {
 	Url          string        `yaml:"url"`
 	OpenConns    int           `yaml:"open_conns"`
@@ -28,8 +33,9 @@ type DatabaseConfig struct {
 }
 
 type EnvironmentConfig struct {
-	Server ServerConfig   `yaml:"server"`
-	Db     DatabaseConfig `yaml:"database"`
+	Server  ServerConfig   `yaml:"server"`
+	Handler HandlerConfig  `yaml:"handler"`
+	Db      DatabaseConfig `yaml:"database"`
 }
 
 func NewConfig(name string) (EnvironmentConfig, error) {

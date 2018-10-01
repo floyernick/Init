@@ -7,7 +7,7 @@ import (
 
 func (api *API) UsersGet(w http.ResponseWriter, r *http.Request) {
 	var req request.UsersGet
-	err := ProcessRequest(r, &req)
+	err := ProcessRequest(r, &req, api.checkHash, api.hashSalt)
 	if err != nil {
 		ReturnErrorResponse(w, "invalid request data")
 		return

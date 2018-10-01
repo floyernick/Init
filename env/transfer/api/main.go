@@ -1,24 +1,31 @@
 package api
 
 import (
+	"Init/env/config"
 	"Init/usecases"
+	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"net/http"
+
+	"golang.org/x/crypto/sha3"
 )
 
 type API struct {
 	controller usecases.Controller
+	checkHash  bool
+	hashSalt   string
 }
 
-func NewAPIHandler(controller usecases.Controller) *http.ServeMux {
-	api := &API{controller}
+func NewAPIHandler(config config.HandlerConfig, controller usecases.Controller) *http.ServeMux {
+	api := &API{controller, config.CheckHash, config.HashSalt}
 	mux := http.NewServeMux()
 	mux.HandleFunc("/users.get", api.UsersGet)
 	return mux
 }
 
-func ProcessRequest(request *http.Request, v interface{}) error {
+func ProcessRequest(request *http.Request, v interface{}, checkHash bool, hashSalt string) error {
 
 	requestBody, err := ioutil.ReadAll(request.Body)
 
@@ -32,6 +39,22 @@ func ProcessRequest(request *http.Request, v interface{}) error {
 
 	if err != nil {
 		return err
+	}
+
+	if checkHash {
+
+		requestHash := request.Header.Get("X-Hash")
+
+		hashSequence := make([]byte, len(requestBody), len(requestBody)*2)
+		copy(hashSequence, requestBody)
+		hashSequence = append(hashSequence, byte(len(hashSequence)%255))
+		hashSequence = append(hashSequence, []byte(hashSalt)...)
+		hashValue := sha3.Sum256(hashSequence)
+
+		if requestHash != hex.EncodeToString(hashValue[:]) {
+			return errors.New("invalid hash")
+		}
+
 	}
 
 	return nil
