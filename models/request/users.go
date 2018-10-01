@@ -1,5 +1,5 @@
 package request
 
 type UsersGet struct {
-	Id int
+	Id int `json:"id" pattern:""`
 }

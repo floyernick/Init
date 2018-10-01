@@ -8,6 +8,10 @@ import (
 
 func (controller Controller) UsersGet(req request.UsersGet) (response.UsersGet, error) {
 
+	if ok := request.Process(req); !ok {
+		return response.UsersGet{}, errors.New("invalid request params")
+	}
+
 	user, err := controller.db.GetUserById(req.Id)
 
 	if err != nil {
