@@ -38,6 +38,12 @@ func ProcessRequest(request *http.Request, v interface{}) error {
 
 }
 
+type Response struct {
+	Status bool        `json:"status"`
+	Result interface{} `json:"result,omitempty"`
+	Error  interface{} `json:"error,omitempty"`
+}
+
 func returnResponse(response http.ResponseWriter, data []byte) {
 
 	response.Header().Set("Content-Type", "application/json")
@@ -47,18 +53,18 @@ func returnResponse(response http.ResponseWriter, data []byte) {
 }
 
 func ReturnSuccessResponse(response http.ResponseWriter, v interface{}) {
-	responseBody := map[string]interface{}{
-		"status": true,
-		"result": v,
+	responseBody := Response{
+		Status: true,
+		Result: v,
 	}
 	data, _ := json.Marshal(responseBody)
 	returnResponse(response, data)
 }
 
 func ReturnErrorResponse(response http.ResponseWriter, v interface{}) {
-	responseBody := map[string]interface{}{
-		"status": false,
-		"error":  v,
+	responseBody := Response{
+		Status: false,
+		Error:  v,
 	}
 	data, _ := json.Marshal(responseBody)
 	returnResponse(response, data)
