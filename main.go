@@ -5,6 +5,7 @@ import (
 	"Init/env/database/postgres"
 	"Init/env/server"
 	"Init/env/transfer/api"
+	"Init/tools/logger"
 	"Init/usecases"
 	"flag"
 )
@@ -18,13 +19,13 @@ func main() {
 	cfg, err := config.NewConfig(envName)
 
 	if err != nil {
-		panic(err)
+		logger.Error(err.Error())
 	}
 
 	db, err := postgres.NewPostgresDatabase(cfg.Db)
 
 	if err != nil {
-		panic(err)
+		logger.Error(err.Error())
 	}
 
 	controller := usecases.NewController(db)
@@ -34,7 +35,7 @@ func main() {
 	err = server.RunServer(cfg.Server, APIHandler)
 
 	if err != nil {
-		panic(err)
+		logger.Error(err.Error())
 	}
 
 }
