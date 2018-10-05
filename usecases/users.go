@@ -3,14 +3,17 @@ package usecases
 import (
 	"Init/models/request"
 	"Init/models/response"
+
 	"errors"
+
+	"github.com/floyernick/validator-go"
 )
 
 func (controller Controller) UsersGet(req request.UsersGet) (response.UsersGet, error) {
 
 	var res response.UsersGet
 
-	if ok := request.Process(req); !ok {
+	if ok := validator.Process(req); !ok {
 		return res, errors.New("invalid request params")
 	}
 
