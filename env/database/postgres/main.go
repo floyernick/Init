@@ -23,7 +23,7 @@ func NewPostgresDatabase(config config.DatabaseConfig) (database.Database, error
 	pool.SetMaxOpenConns(config.OpenConns)
 	pool.SetMaxIdleConns(config.IdleConns)
 
-	if pool.Ping() != nil {
+	if err := pool.Ping(); err != nil {
 		return nil, err
 	}
 
