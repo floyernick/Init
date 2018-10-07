@@ -5,16 +5,14 @@ import (
 	"Init/models/response"
 
 	"errors"
-
-	"github.com/floyernick/validator-go"
 )
 
 func (controller Controller) UsersGet(req request.UsersGet) (response.UsersGet, error) {
 
 	var res response.UsersGet
 
-	if ok := validator.Process(req); !ok {
-		return res, errors.New("invalid request params")
+	if err := controller.validator.Process(req); err != nil {
+		return res, errors.New("invalid params")
 	}
 
 	user, err := controller.db.GetUserById(req.Id)

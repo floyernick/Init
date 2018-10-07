@@ -5,6 +5,7 @@ import (
 	"Init/env/database/postgres"
 	"Init/env/server"
 	"Init/env/transfer/api"
+	"Init/env/validator/validator"
 	"Init/tools/logger"
 	"Init/usecases"
 	"flag"
@@ -28,7 +29,9 @@ func main() {
 		logger.Error(err.Error())
 	}
 
-	controller := usecases.NewController(db)
+	validate := validator.NewValidator()
+
+	controller := usecases.NewController(db, validate)
 
 	APIHandler := api.NewAPIHandler(cfg.Handler, controller)
 

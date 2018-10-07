@@ -1,5 +1,5 @@
 package request
 
 type UsersGet struct {
-	Id int `json:"id" validate:"required; min=1"`
+	Id int `json:"id" validate:"required,min=1"`
 }

@@ -2,22 +2,25 @@
 
 
 [[projects]]
-  branch = "master"
-  name = "github.com/floyernick/validator-go"
+  name = "github.com/go-playground/locales"
+  packages = [
+    ".",
+    "currency"
+  ]
+  revision = "f63010822830b6fe52288ee52d5a1151088ce039"
+  version = "v0.12.1"
+
+[[projects]]
+  name = "github.com/go-playground/universal-translator"
   packages = ["."]
-  revision = "9120ef9e475f86ff137558674bf1c4d11e30b45d"
+  revision = "b32fa301c9fe55953584134cb6853a13c87ec0a1"
+  version = "v0.16.0"
 
 [[projects]]
   name = "github.com/go-yaml/yaml"
   packages = ["."]
   revision = "5420a8b6744d3b0345ab293f6fcba19c978f1183"
   version = "v2.2.1"
-
-[[projects]]
-  name = "github.com/google/uuid"
-  packages = ["."]
-  revision = "d460ce9f8df2e77fb1ba55ca87fafed96c607494"
-  version = "v1.0.0"
 
 [[projects]]
   name = "github.com/lib/pq"
@@ -34,9 +37,15 @@
   packages = ["sha3"]
   revision = "e3636079e1a4c1f337f212cc5cd2aca108f6c900"
 
+[[projects]]
+  name = "gopkg.in/go-playground/validator.v9"
+  packages = ["."]
+  revision = "e69e9a28bb62b977fdc58d051f1bb477b7cbe486"
+  version = "v9.21.0"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "317689dcaa333590b1337cd00f0536fed5a66b9ec4c7dfc317c334d4f6f97ee5"
+  inputs-digest = "3fb868d1d4a85e97393beaaf2e47dac20c88568f44793388f3d8d09870e7e4ff"
   solver-name = "gps-cdcl"
   solver-version = 1
