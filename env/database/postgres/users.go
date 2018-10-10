@@ -6,7 +6,7 @@ import (
 	"database/sql"
 )
 
-func (db *Database) GetUserById(id int) (models.User, error) {
+func (db Database) GetUserById(id int) (models.User, error) {
 
 	var user models.User
 

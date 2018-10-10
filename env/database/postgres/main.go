@@ -27,7 +27,7 @@ func NewPostgresDatabase(config config.DatabaseConfig) (database.Database, error
 		return nil, err
 	}
 
-	db := &Database{pool}
+	db := Database{pool}
 
 	return db, nil
 

@@ -19,7 +19,7 @@ type API struct {
 }
 
 func NewAPIHandler(config config.HandlerConfig, controller usecases.Controller) *http.ServeMux {
-	api := &API{controller, config.CheckHash, config.HashSalt}
+	api := API{controller, config.CheckHash, config.HashSalt}
 	mux := http.NewServeMux()
 	mux.HandleFunc("/users.get", api.UsersGet)
 	return mux
@@ -30,7 +30,7 @@ func ProcessRequest(request *http.Request, v interface{}, checkHash bool, hashSa
 	requestBody, err := ioutil.ReadAll(request.Body)
 
 	if err != nil {
-		return err
+		return errors.New("invalid request data")
 	}
 
 	defer request.Body.Close()
@@ -38,7 +38,7 @@ func ProcessRequest(request *http.Request, v interface{}, checkHash bool, hashSa
 	err = json.Unmarshal(requestBody, v)
 
 	if err != nil {
-		return err
+		return errors.New("invalid request data")
 	}
 
 	if checkHash {
@@ -52,7 +52,7 @@ func ProcessRequest(request *http.Request, v interface{}, checkHash bool, hashSa
 		hashValue := sha3.Sum256(hashSequence)
 
 		if requestHash != hex.EncodeToString(hashValue[:]) {
-			return errors.New("invalid hash")
+			return errors.New("invalid request hash")
 		}
 
 	}
