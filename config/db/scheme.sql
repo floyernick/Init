@@ -1,4 +1,5 @@
-CREATE TABLE users (
-  user_id SERIAL PRIMARY KEY,
-  name VARCHAR(75) NOT NULL
+CREATE TABLE notes (
+  id    UUID PRIMARY KEY,
+  title VARCHAR(50) NOT NULL,
+  data  TEXT        NOT NULL
 );

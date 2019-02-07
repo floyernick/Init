@@ -21,7 +21,10 @@ type API struct {
 func NewAPIHandler(config config.HandlerConfig, controller usecases.Controller) *http.ServeMux {
 	api := API{controller, config.CheckHash, config.HashSalt}
 	mux := http.NewServeMux()
-	mux.HandleFunc("/users.get", api.UsersGet)
+	mux.HandleFunc("/notes.create", api.NotesCreate)
+	mux.HandleFunc("/notes.update", api.NotesUpdate)
+	mux.HandleFunc("/notes.delete", api.NotesDelete)
+	mux.HandleFunc("/notes.get", api.NotesGet)
 	return mux
 }
 
