@@ -1,41 +1,36 @@
 package main
 
 import (
-	"Init/env/config"
-	"Init/env/database/postgres"
-	"Init/env/server"
-	"Init/env/transfer/api"
-	"Init/env/validator/validator"
-	"Init/tools/logger"
-	"Init/usecases"
 	"flag"
+
+	"Init/config"
+	"Init/controller"
+	"Init/presenter"
+	"Init/storage"
+	"Init/tools/logger"
 )
 
 func main() {
 
-	envName := *flag.String("c", "default.cfg", "Environment config name")
+	environmentName := *flag.String("c", "default.yaml", "Environment config name")
 
 	flag.Parse()
 
-	cfg, err := config.NewConfig(envName)
+	config_, err := config.LoadConfig(environmentName)
 
 	if err != nil {
 		logger.Error(err.Error())
 	}
 
-	db, err := postgres.NewPostgresDatabase(cfg.Db)
+	storage_, err := storage.Init(config_.Database)
 
 	if err != nil {
 		logger.Error(err.Error())
 	}
 
-	validate := validator.NewValidator()
+	controller_ := controller.Init(storage_)
 
-	controller := usecases.NewController(db, validate)
-
-	APIHandler := api.NewAPIHandler(cfg.Handler, controller)
-
-	err = server.RunServer(cfg.Server, APIHandler)
+	err = presenter.Init(config_.Server, controller_)
 
 	if err != nil {
 		logger.Error(err.Error())

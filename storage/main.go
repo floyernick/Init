@@ -1,18 +1,18 @@
-package postgres
+package storage
 
 import (
-	"Init/env/config"
-	"Init/env/database"
 	"database/sql"
+
 	_ "github.com/lib/pq"
+
+	"Init/config"
 )
 
-type Database struct {
-	db *sql.DB
+type Service struct {
+	pool *sql.DB
 }
 
-func NewPostgresDatabase(config config.DatabaseConfig) (database.Database, error) {
-
+func Init(config config.DatabaseConfig) (Storage, error) {
 	pool, err := sql.Open("postgres", config.Url)
 
 	if err != nil {
@@ -27,8 +27,8 @@ func NewPostgresDatabase(config config.DatabaseConfig) (database.Database, error
 		return nil, err
 	}
 
-	db := Database{pool}
+	storage := Service{pool}
 
-	return db, nil
+	return storage, nil
 
 }

@@ -1,4 +1,4 @@
-package postgres
+package storage
 
 import (
 	"database/sql"
@@ -7,11 +7,11 @@ import (
 	"Init/tools/logger"
 )
 
-func (db Database) CreateNote(note models.Note) error {
+func (storage Service) CreateNote(note models.Note) error {
 
 	query := "INSERT INTO notes(id, title, data) VALUES($1, $2, $3)"
 
-	_, err := db.db.Exec(query, note.Id, note.Title, note.Data)
+	_, err := storage.pool.Exec(query, note.Id, note.Title, note.Data)
 
 	if err != nil {
 		logger.Error(err.Error())
@@ -21,11 +21,11 @@ func (db Database) CreateNote(note models.Note) error {
 	return nil
 }
 
-func (db Database) UpdateNote(note models.Note) error {
+func (storage Service) UpdateNote(note models.Note) error {
 
 	query := "UPDATE notes SET title = $2, data = $3 WHERE id = $1"
 
-	_, err := db.db.Exec(query, note.Id, note.Title, note.Data)
+	_, err := storage.pool.Exec(query, note.Id, note.Title, note.Data)
 
 	if err != nil {
 		logger.Error(err.Error())
@@ -35,11 +35,11 @@ func (db Database) UpdateNote(note models.Note) error {
 	return nil
 }
 
-func (db Database) DeleteNote(id string) error {
+func (storage Service) DeleteNote(id string) error {
 
 	query := "DELETE FROM notes WHERE id = $1"
 
-	_, err := db.db.Exec(query, id)
+	_, err := storage.pool.Exec(query, id)
 
 	if err != nil {
 		logger.Error(err.Error())
@@ -49,13 +49,13 @@ func (db Database) DeleteNote(id string) error {
 	return nil
 }
 
-func (db Database) GetNote(id string) (models.Note, error) {
+func (storage Service) GetNote(id string) (models.Note, error) {
 
 	var note models.Note
 
 	query := "SELECT id, title, data FROM notes WHERE id = $1"
 
-	err := db.db.QueryRow(query, id).Scan(&note.Id, &note.Title, &note.Data)
+	err := storage.pool.QueryRow(query, id).Scan(&note.Id, &note.Title, &note.Data)
 
 	if err != nil && err != sql.ErrNoRows {
 		logger.Error(err.Error())

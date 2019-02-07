@@ -1,8 +1,12 @@
-package database
+package storage
 
 import "Init/models"
 
-type Database interface {
+type Storage interface {
+	noteStorage
+}
+
+type noteStorage interface {
 	CreateNote(models.Note) error
 	UpdateNote(models.Note) error
 	DeleteNote(string) error

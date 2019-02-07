@@ -14,15 +14,6 @@ type ServerConfig struct {
 	ReadTimeout  time.Duration `yaml:"read_timeout"`
 	WriteTimeout time.Duration `yaml:"write_timeout"`
 	IdleTimeout  time.Duration `yaml:"idle_timeout"`
-	SecureConn   bool          `yaml:"secure_conn"`
-	SecureCert   string        `yaml:"secure_cert"`
-	SecureKey    string        `yaml:"secure_key"`
-	SecureCA     string        `yaml:"secure_ca"`
-}
-
-type HandlerConfig struct {
-	CheckHash bool   `yaml:"hash_check"`
-	HashSalt  string `yaml:"hash_salt"`
 }
 
 type DatabaseConfig struct {
@@ -33,15 +24,14 @@ type DatabaseConfig struct {
 }
 
 type EnvironmentConfig struct {
-	Server  ServerConfig   `yaml:"server"`
-	Handler HandlerConfig  `yaml:"handler"`
-	Db      DatabaseConfig `yaml:"database"`
+	Server   ServerConfig   `yaml:"server"`
+	Database DatabaseConfig `yaml:"database"`
 }
 
-func NewConfig(name string) (EnvironmentConfig, error) {
+func LoadConfig(name string) (EnvironmentConfig, error) {
 
 	cwd, _ := os.Getwd()
-	cwd = filepath.Join(cwd, "config", "env")
+	cwd = filepath.Join(cwd, "config")
 
 	data, err := ioutil.ReadFile(filepath.Join(cwd, name))
 
