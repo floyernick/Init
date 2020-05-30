@@ -1,50 +1,59 @@
 package config
 
 import (
-	"io/ioutil"
 	"os"
-	"path/filepath"
+	"strconv"
 	"time"
-
-	"github.com/go-yaml/yaml"
 )
 
 type ServerConfig struct {
-	Port         string        `yaml:"port"`
-	ReadTimeout  time.Duration `yaml:"read_timeout"`
-	WriteTimeout time.Duration `yaml:"write_timeout"`
-	IdleTimeout  time.Duration `yaml:"idle_timeout"`
+	Port         string
+	ReadTimeout  time.Duration
+	WriteTimeout time.Duration
+	IdleTimeout  time.Duration
 }
 
 type DatabaseConfig struct {
-	Url          string        `yaml:"url"`
-	OpenConns    int           `yaml:"open_conns"`
-	IdleConns    int           `yaml:"idle_conns"`
-	ConnLifetime time.Duration `yaml:"conn_lifetime"`
+	Url          string
+	OpenConns    int
+	IdleConns    int
+	ConnLifetime time.Duration
 }
 
 type EnvironmentConfig struct {
-	Server   ServerConfig   `yaml:"server"`
-	Database DatabaseConfig `yaml:"database"`
+	Server   ServerConfig
+	Database DatabaseConfig
 }
 
 func LoadConfig(name string) (EnvironmentConfig, error) {
 
-	cwd, _ := os.Getwd()
-	cwd = filepath.Join(cwd, "config")
+	serverPort := os.Getenv("SERVER_PORT")
+	serverReadTimeout, _ := strconv.Atoi(os.Getenv("SERVER_READ_TIMEOUT"))
+	serverWriteTimeout, _ := strconv.Atoi(os.Getenv("SERVER_WRITE_TIMEOUT"))
+	serverIdleTimeout, _ := strconv.Atoi(os.Getenv("SERVER_IDLE_TIMEOUT"))
 
-	data, err := ioutil.ReadFile(filepath.Join(cwd, name))
+	databaseUrl := os.Getenv("DATABASE_URL")
+	databaseOpenConns, _ := strconv.Atoi(os.Getenv("DATABASE_OPEN_CONNS"))
+	databaseIdleConns, _ := strconv.Atoi(os.Getenv("DATABASE_IDLE_CONNS"))
+	databaseConnLifetime, _ := strconv.Atoi(os.Getenv("DATABASE_CONN_LIFETIME"))
 
-	var config EnvironmentConfig
-
-	if err != nil {
-		return config, err
+	serverConfig := ServerConfig{
+		Port:         serverPort,
+		ReadTimeout:  time.Duration(serverReadTimeout) * time.Second,
+		WriteTimeout: time.Duration(serverWriteTimeout) * time.Second,
+		IdleTimeout:  time.Duration(serverIdleTimeout) * time.Second,
 	}
 
-	err = yaml.Unmarshal(data, &config)
+	databaseConfig := DatabaseConfig{
+		Url:          databaseUrl,
+		OpenConns:    databaseOpenConns,
+		IdleConns:    databaseIdleConns,
+		ConnLifetime: time.Duration(databaseConnLifetime) * time.Second,
+	}
 
-	if err != nil {
-		return config, err
+	config := EnvironmentConfig{
+		Server:   serverConfig,
+		Database: databaseConfig,
 	}
 
 	return config, nil
