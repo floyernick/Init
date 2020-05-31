@@ -51,7 +51,7 @@ func (controller Controller) NotesUpdate(params request.NotesUpdate) (response.N
 		return result, errors.InternalError{}
 	}
 
-	if note.IsEmpty() {
+	if !note.Exists() {
 		return result, errors.NoteNotFound{}
 	}
 
@@ -89,7 +89,7 @@ func (controller Controller) NotesDelete(params request.NotesDelete) (response.N
 		return result, errors.InternalError{}
 	}
 
-	if note.IsEmpty() {
+	if !note.Exists() {
 		return result, errors.NoteNotFound{}
 	}
 
@@ -119,7 +119,7 @@ func (controller Controller) NotesGet(params request.NotesGet) (response.NotesGe
 		return result, errors.InternalError{}
 	}
 
-	if note.IsEmpty() {
+	if !note.Exists() {
 		return result, errors.NoteNotFound{}
 	}
 

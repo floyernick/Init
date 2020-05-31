@@ -16,21 +16,21 @@ func main() {
 
 	flag.Parse()
 
-	config_, err := config.LoadConfig(environmentName)
+	configData, err := config.LoadConfig(environmentName)
 
 	if err != nil {
 		logger.Error(err.Error())
 	}
 
-	storage_, err := storage.Init(config_.Database)
+	storageService, err := storage.Init(configData.Database)
 
 	if err != nil {
 		logger.Error(err.Error())
 	}
 
-	controller_ := controller.Init(storage_)
+	controllerService := controller.Init(storageService)
 
-	err = presenter.Init(config_.Server, controller_)
+	err = presenter.Init(configData.Server, controllerService)
 
 	if err != nil {
 		logger.Error(err.Error())

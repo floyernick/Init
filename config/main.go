@@ -37,23 +37,19 @@ func LoadConfig(name string) (EnvironmentConfig, error) {
 	databaseIdleConns, _ := strconv.Atoi(os.Getenv("DATABASE_IDLE_CONNS"))
 	databaseConnLifetime, _ := strconv.Atoi(os.Getenv("DATABASE_CONN_LIFETIME"))
 
-	serverConfig := ServerConfig{
-		Port:         serverPort,
-		ReadTimeout:  time.Duration(serverReadTimeout) * time.Second,
-		WriteTimeout: time.Duration(serverWriteTimeout) * time.Second,
-		IdleTimeout:  time.Duration(serverIdleTimeout) * time.Second,
-	}
-
-	databaseConfig := DatabaseConfig{
-		Url:          databaseUrl,
-		OpenConns:    databaseOpenConns,
-		IdleConns:    databaseIdleConns,
-		ConnLifetime: time.Duration(databaseConnLifetime) * time.Second,
-	}
-
 	config := EnvironmentConfig{
-		Server:   serverConfig,
-		Database: databaseConfig,
+		Server: ServerConfig{
+			Port:         serverPort,
+			ReadTimeout:  time.Duration(serverReadTimeout) * time.Second,
+			WriteTimeout: time.Duration(serverWriteTimeout) * time.Second,
+			IdleTimeout:  time.Duration(serverIdleTimeout) * time.Second,
+		},
+		Database: DatabaseConfig{
+			Url:          databaseUrl,
+			OpenConns:    databaseOpenConns,
+			IdleConns:    databaseIdleConns,
+			ConnLifetime: time.Duration(databaseConnLifetime) * time.Second,
+		},
 	}
 
 	return config, nil

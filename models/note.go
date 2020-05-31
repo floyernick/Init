@@ -6,6 +6,6 @@ type Note struct {
 	Data  string
 }
 
-func (note *Note) IsEmpty() bool {
-	return note.Id == ""
+func (note *Note) Exists() bool {
+	return note.Id != ""
 }

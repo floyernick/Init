@@ -11,7 +11,7 @@ func (storage Service) CreateNote(note models.Note) error {
 
 	query := "INSERT INTO notes(id, title, data) VALUES($1, $2, $3)"
 
-	_, err := storage.pool.Exec(query, note.Id, note.Title, note.Data)
+	_, err := storage.Performer().Exec(query, note.Id, note.Title, note.Data)
 
 	if err != nil {
 		logger.Error(err.Error())
@@ -25,7 +25,7 @@ func (storage Service) UpdateNote(note models.Note) error {
 
 	query := "UPDATE notes SET title = $2, data = $3 WHERE id = $1"
 
-	_, err := storage.pool.Exec(query, note.Id, note.Title, note.Data)
+	_, err := storage.Performer().Exec(query, note.Id, note.Title, note.Data)
 
 	if err != nil {
 		logger.Error(err.Error())
@@ -39,7 +39,7 @@ func (storage Service) DeleteNote(id string) error {
 
 	query := "DELETE FROM notes WHERE id = $1"
 
-	_, err := storage.pool.Exec(query, id)
+	_, err := storage.Performer().Exec(query, id)
 
 	if err != nil {
 		logger.Error(err.Error())
@@ -55,7 +55,7 @@ func (storage Service) GetNote(id string) (models.Note, error) {
 
 	query := "SELECT id, title, data FROM notes WHERE id = $1"
 
-	err := storage.pool.QueryRow(query, id).Scan(&note.Id, &note.Title, &note.Data)
+	err := storage.Performer().QueryRow(query, id).Scan(&note.Id, &note.Title, &note.Data)
 
 	if err != nil && err != sql.ErrNoRows {
 		logger.Error(err.Error())
