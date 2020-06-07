@@ -5,14 +5,7 @@ import (
 	"database/sql"
 )
 
-type Performer interface {
-	Exec(query string, args ...interface{}) (sql.Result, error)
-	Query(query string, args ...interface{}) (*sql.Rows, error)
-	QueryRow(query string, args ...interface{}) *sql.Row
-}
-
 type Storage interface {
-	Performer() Performer
 	Transaction() (Storage, error)
 	Commit() error
 	Rollback() error
@@ -24,27 +17,34 @@ type noteStorage interface {
 	UpdateNote(models.Note) error
 	DeleteNote(string) error
 	GetNote(string) (models.Note, error)
+	GetNotes() NoteQuerier
 }
 
-type QueryBuilder interface {
-	Equals(field string, value interface{}) string
-	NotEquals(field string, value interface{}) string
-	Greater(field string, value interface{}) string
-	GreaterOrEquals(field string, value interface{}) string
-	Less(field string, value interface{}) string
-	LessOrEquals(field string, value interface{}) string
-	Like(field string, value interface{}) string
-	Contains(field string, value interface{}) string
-	And(conditions ...string) string
-	Or(conditions ...string) string
-	Add(condition string)
-	Paginate(offset int, limit int)
-	Order(field string, value string)
-	Count() int
+type Performer interface {
+	Exec(query string, args ...interface{}) (sql.Result, error)
+	Query(query string, args ...interface{}) (*sql.Rows, error)
+	QueryRow(query string, args ...interface{}) *sql.Row
 }
 
-type NoteQuery interface {
-	QueryBuilder
-	Fetch() []models.Note
-	FetchOne() models.Note
+type SelectQuerier interface {
+	Equals(field string, value interface{}) SelectQuerier
+	NotEquals(field string, value interface{}) SelectQuerier
+	Greater(field string, value interface{}) SelectQuerier
+	GreaterOrEquals(field string, value interface{}) SelectQuerier
+	Less(field string, value interface{}) SelectQuerier
+	LessOrEquals(field string, value interface{}) SelectQuerier
+	Like(field string, value interface{}) SelectQuerier
+	Contains(field string, value interface{}) SelectQuerier
+	And() SelectQuerier
+	Or() SelectQuerier
+	Group() SelectQuerier
+	EndGroup() SelectQuerier
+	Paginate(offset int, limit int) SelectQuerier
+	Order(field string, value string) SelectQuerier
+}
+
+type NoteQuerier interface {
+	SelectQuerier
+	Fetch() ([]models.Note, error)
+	FetchOne() (models.Note, error)
 }

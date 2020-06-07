@@ -13,7 +13,7 @@ type Service struct {
 	tx   *sql.Tx
 }
 
-func (service Service) Performer() Performer {
+func (service Service) performer() Performer {
 	if service.tx != nil {
 		return service.tx
 	}
@@ -21,6 +21,10 @@ func (service Service) Performer() Performer {
 }
 
 func (service Service) Transaction() (Storage, error) {
+
+	if service.tx != nil {
+		return service, nil
+	}
 
 	tx, err := service.pool.Begin()
 
