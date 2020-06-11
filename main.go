@@ -5,8 +5,7 @@ import (
 
 	"Init/config"
 	"Init/controller"
-	"Init/presenter"
-	"Init/storage"
+	"Init/database"
 	"Init/tools/logger"
 )
 
@@ -16,24 +15,22 @@ func main() {
 
 	flag.Parse()
 
-	configData, err := config.LoadConfig(environmentName)
+	cfg, err := config.LoadConfig(environmentName)
 
 	if err != nil {
-		logger.Error(err.Error())
+		logger.Error(err)
 	}
 
-	storageService, err := storage.Init(configData.Database)
+	db, err := database.Init(cfg.Database)
 
 	if err != nil {
-		logger.Error(err.Error())
+		logger.Error(err)
 	}
 
-	controllerService := controller.Init(storageService)
-
-	err = presenter.Init(configData.Server, controllerService)
+	err = controller.Init(cfg.Server, db)
 
 	if err != nil {
-		logger.Error(err.Error())
+		logger.Error(err)
 	}
 
 }

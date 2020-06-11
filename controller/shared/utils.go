@@ -7,23 +7,12 @@ import (
 	"net/http"
 )
 
-func handleRequest(handler func(r *http.Request) (interface{}, error)) func(http.ResponseWriter, *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
-		result, err := handler(r)
-		if err != nil {
-			respondWithError(w, err)
-		} else {
-			respondWithSuccess(w, result)
-		}
-	}
-}
-
-func parseRequestBody(request *http.Request, v interface{}) error {
+func ParseRequestBody(request *http.Request, v interface{}) error {
 
 	requestBody, err := ioutil.ReadAll(request.Body)
 
 	if err != nil {
-		return errors.BadRequest{}
+		return errors.BadRequest
 	}
 
 	defer request.Body.Close()
@@ -31,24 +20,24 @@ func parseRequestBody(request *http.Request, v interface{}) error {
 	err = json.Unmarshal(requestBody, v)
 
 	if err != nil {
-		return errors.BadRequest{}
+		return errors.BadRequest
 	}
 
 	return nil
 
 }
 
-type ResponseError struct {
+type responseError struct {
 	Error string `json:"error"`
 }
 
-func respondWithSuccess(response http.ResponseWriter, v interface{}) {
+func RespondWithSuccess(response http.ResponseWriter, v interface{}) {
 	data, _ := json.Marshal(v)
 	respond(response, data)
 }
 
-func respondWithError(response http.ResponseWriter, err error) {
-	error := ResponseError{Error: err.Error()}
+func RespondWithError(response http.ResponseWriter, err error) {
+	error := responseError{Error: err.Error()}
 	data, _ := json.Marshal(error)
 	respond(response, data)
 }
